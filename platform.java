@@ -33,7 +33,6 @@ public class Platform extends Actor
 
     public void mover()
     {
-        // movimiento vertical
         if(vertical)
         {
             setLocation(getX(), getY() + velocidadY);
@@ -44,7 +43,6 @@ public class Platform extends Actor
             }
         }
 
-        // movimiento horizontal
         else
         {
             setLocation(getX() + velocidadX, getY());
