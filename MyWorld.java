@@ -11,10 +11,12 @@ public class MyWorld extends World
     /**
      * Constructor for objects of class MyWorld.
      */
+    GreenfootSound musica = new GreenfootSound("Juegooo.mp3");
     public MyWorld()
     {
         super(900, 600, 1);
         prepare();
+        musica.playLoop();
     }
 
     /**
@@ -81,5 +83,12 @@ public class MyWorld extends World
         p5.limiteMax = 650;
 
         addObject(p5, 450, 150);
+
+        Penguin penguin = new Penguin();
+        addObject(penguin,441,104);
+        Bear bear = new Bear();
+        addObject(bear,853,472);
+        bear.setLocation(854,512);
+
     }
 }

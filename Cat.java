@@ -15,50 +15,45 @@ public class Cat extends Actor
     int velocidadY = 0;
     int gravedad = 1;
     int salto = -15;
-
+    GreenfootImage defaultImg = new GreenfootImage("cat.png");
+    GreenfootImage rightImg = new GreenfootImage("cat-right.png");
+    GreenfootImage leftImg = new GreenfootImage("cat-left.png");
     public Cat()
     {
-        GreenfootImage imagen = getImage();
-        imagen.scale(50, 60); 
-        setImage(imagen);
+        defaultImg.scale(50, 60); 
+        setImage(defaultImg);
     }
     public void act()
     {
         mover();
         aplicarGravedad();
+        verificarVictoria();
     }
     public void mover()
     {
         if(Greenfoot.isKeyDown("left"))
         {
             setLocation(getX()-4, getY());
+            leftImg.scale(70, 60);
+            setImage(leftImg);
         }
 
         if(Greenfoot.isKeyDown("right"))
         {
             setLocation(getX()+4, getY());
+            rightImg.scale(70, 60);
+            setImage(rightImg);
         }
 
-        if(Greenfoot.isKeyDown("space") && puedeSaltar())
+        if(Greenfoot.isKeyDown("up") && puedeSaltar())
         {
             velocidadY = salto;
         }
-    }
-
-    public void aplicarGravedad1()
-    {
-        velocidadY += gravedad;
-
-    setLocation(getX(), getY() + velocidadY);
-
-    int suelo = getWorld().getHeight() - 50;
-
-    if(getY() >= suelo - getImage().getHeight()/2)
-    {
-        setLocation(getX(), suelo - getImage().getHeight()/2);
-
-        velocidadY = 0;
-    }
+        if(!Greenfoot.isKeyDown("left") &&
+           !Greenfoot.isKeyDown("right") && !Greenfoot.isKeyDown("space"))
+        {
+            setImage(defaultImg);
+        }
     }
     
     public void aplicarGravedad()
@@ -132,5 +127,23 @@ public class Cat extends Actor
         boolean enSuelo = getY() >= suelo - getImage().getHeight()/2;
     
         return plataforma != null || enSuelo;
+    }
+    public void verificarVictoria()
+    {
+        if(isTouching(Dispenser.class))
+        {
+            Bear bear = (Bear)getWorld().getObjects(Bear.class).get(0);
+            Greenfoot.delay(60);
+            bear.ganar();
+            Greenfoot.delay(60);
+            getWorld().showText
+            (
+                "¡FELICIDADES! AYUDASTE A TU AMIGO EL OSO POLAR",
+                getWorld().getWidth()/2,
+                50
+            );
+
+            Greenfoot.stop();
+        }
     }
 }
