@@ -24,19 +24,39 @@ public class Penguin extends Actor
 
 
     boolean vertical = false;
+    GreenfootImage imagen;
     public Penguin()
     {
-        GreenfootImage imagen = getImage();
-        imagen.scale(50, 60);
+    }
+    public void addedToWorld(World world)
+    {
+        if(world instanceof MyWorld)
+        {
+            imagen =
+            new GreenfootImage("penguin.png");
+            imagen.scale(50, 60);
+    
+        } 
+        if(world instanceof Jungle)
+        {
+            imagen =
+            new GreenfootImage("monkey.png");
+            imagen.scale(90, 100);
+    
+        }
+        
         setImage(imagen);
     }
     public void act()
     {
-        MyWorld mundo = (MyWorld)getWorld();
-
-        if(!mundo.juegoIniciado)
+        if(getWorld() instanceof MyWorld)
         {
-            return;
+            MyWorld mundo = (MyWorld)getWorld();
+        
+            if(!mundo.juegoIniciado)
+            {
+                return;
+            }
         }
         if(derrotado)
         {

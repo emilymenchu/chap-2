@@ -25,14 +25,34 @@ public class Platform extends Actor
     int limiteMax;
 
     boolean vertical = false;
-
+    GreenfootImage imagen;
+    public void addedToWorld(World world)
+    {
+        if(world instanceof MyWorld)
+        {
+            imagen =
+            new GreenfootImage("platform.png");
+    
+        } 
+        if(world instanceof Jungle)
+        {
+            imagen =
+            new GreenfootImage("2platform.png");
+    
+        }
+        imagen.scale(150, 40);
+        setImage(imagen);
+    }
     public void act()
     {
-        MyWorld mundo = (MyWorld)getWorld();
-
-        if(!mundo.juegoIniciado)
+        if(getWorld() instanceof MyWorld)
         {
-            return;
+            MyWorld mundo = (MyWorld)getWorld();
+        
+            if(!mundo.juegoIniciado)
+            {
+                return;
+            }
         }
         mover();
     }

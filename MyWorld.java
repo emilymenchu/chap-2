@@ -55,6 +55,10 @@ public class MyWorld extends World
             showText("", 450, 100);
         }
     }
+    public void detenerMusica()
+    {
+        musica.stop();
+    }
     private void prepare()
     {
         Dispenser dispenser =  new  Dispenser();

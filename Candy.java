@@ -9,9 +9,26 @@ public class Candy extends Actor
 {
 int velocidad = 4;
 
+    GreenfootImage imagen;
     public Candy()
     {
-        GreenfootImage imagen = getImage();
+    }
+    public void addedToWorld(World world)
+    {
+        if(world instanceof MyWorld)
+        {
+            imagen =
+            new GreenfootImage("candy.png");
+            imagen.scale(20, 40);
+    
+        } 
+        if(world instanceof Jungle)
+        {
+            imagen =
+            new GreenfootImage("banana.png");
+            imagen.scale(30, 15);
+    
+        }
         imagen.scale(20, 40);
         setImage(imagen);
     }

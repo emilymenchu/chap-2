@@ -15,28 +15,65 @@ public class Cat extends Actor
     int velocidadY = 0;
     int gravedad = 1;
     int salto = -15;
+    int climb = -3;
     
     boolean cayendo = false;
 
     int timerCaida = 0;
     
-    GreenfootImage defaultImg = new GreenfootImage("cat.png");
-    GreenfootImage rightImg = new GreenfootImage("cat-right.png");
-    GreenfootImage leftImg = new GreenfootImage("cat-left.png");
+    GreenfootImage defaultImg;
+    GreenfootImage rightImg;
+    GreenfootImage leftImg;
+    GreenfootImage climbImg;
+    String amigo;
+    boolean isJungle = false;
     public Cat()
     {
-        defaultImg.scale(50, 60); 
+ 
+    }
+    public void addedToWorld(World world)
+    {
+        if(world instanceof MyWorld)
+        {
+            leftImg =
+            new GreenfootImage("cat-left.png");
+    
+            rightImg =
+            new GreenfootImage("cat-right.png");
+    
+            defaultImg =
+            new GreenfootImage("cat.png");
+            amigo = "OSO POLAR";
+        } 
+        if(world instanceof Jungle)
+        {
+            leftImg =
+            new GreenfootImage("2cat-left.png");
+    
+            rightImg =
+            new GreenfootImage("2cat-right.png");
+    
+            defaultImg =
+            new GreenfootImage("2cat.png");
+            climbImg = new GreenfootImage("cat-climb.png");
+            amigo = "JAGUAR";
+            isJungle = true;
+        }
+        defaultImg.scale(50, 60);
         setImage(defaultImg);
     }
     public void act()
     {
-        MyWorld mundo = (MyWorld)getWorld();
-
-        if(!mundo.juegoIniciado)
+        if(getWorld() instanceof MyWorld)
         {
-            return;
+            MyWorld mundo = (MyWorld)getWorld();
+        
+            if(!mundo.juegoIniciado)
+            {
+                return;
+            }
         }
-         if(cayendo)
+        if(cayendo)
         {
             caerDerrotado();
         }
@@ -64,13 +101,28 @@ public class Cat extends Actor
             rightImg.scale(70, 60);
             setImage(rightImg);
         }
-
-        if(Greenfoot.isKeyDown("up") && puedeSaltar())
+         if(Greenfoot.isKeyDown("up") && puedeSaltar())
         {
-            velocidadY = salto;
+            Actor vine = getOneObjectAtOffset
+            (
+            0,
+            getImage().getHeight()/2 + 2,
+            Vine.class
+            );
+            if(vine!=null)
+            {
+                climbImg.scale(50,60);
+                setImage(climbImg);
+                velocidadY = climb;
+            }
+            else
+            { 
+                velocidadY = salto;
+            }
         }
+        
         if(!Greenfoot.isKeyDown("left") &&
-           !Greenfoot.isKeyDown("right") && !Greenfoot.isKeyDown("space"))
+           !Greenfoot.isKeyDown("right") && !Greenfoot.isKeyDown("up"))
         {
             setImage(defaultImg);
         }
@@ -87,6 +139,12 @@ public class Cat extends Actor
         0,
         getImage().getHeight()/2,
         Platform.class
+    );
+    Actor Vine = getOneObjectAtOffset
+    (
+        0,
+        getImage().getHeight()/2,
+        Vine.class
     );
 
     if(plataforma != null && velocidadY >= 0)
@@ -111,7 +169,24 @@ public class Cat extends Actor
             setLocation(getX(), getY() + p.velocidadY);
         }
     }
+    if(Vine != null && velocidadY >= 0)
+    {
+   
+        velocidadY += gravedad/100;
 
+        Vine p = (Vine)Vine;
+
+        if(!p.vertical)
+        {
+            setLocation(getX() + p.velocidadY, getY());
+        }
+
+        if(p.vertical)
+        {
+            setLocation(getX(), getY() + p.velocidadY);
+        }
+    
+    }
     int suelo = getWorld().getHeight() - 50;
 
     if(getY() >= suelo - getImage().getHeight()/2)
@@ -141,12 +216,19 @@ public class Cat extends Actor
             getImage().getHeight()/2 + 2,
             Platform.class
         );
+        
+        Actor vine = getOneObjectAtOffset
+        (
+            0,
+            getImage().getHeight()/2 + 2,
+            Vine.class
+        );
     
         int suelo = getWorld().getHeight() - 50;
     
         boolean enSuelo = getY() >= suelo - getImage().getHeight()/2;
     
-        return plataforma != null || enSuelo;
+        return (plataforma != null || vine != null) || enSuelo;
     }
     public void verificarVictoria()
     {
@@ -158,12 +240,20 @@ public class Cat extends Actor
             Greenfoot.delay(60);
             getWorld().showText
             (
-                "¡FELICIDADES! AYUDASTE A TU AMIGO EL OSO POLAR",
+                "¡FELICIDADES! AYUDASTE A TU AMIGO "+ amigo,
                 getWorld().getWidth()/2,
                 50
             );
-
-            Greenfoot.stop();
+            if (!isJungle)
+            {
+                ((MyWorld)getWorld()).detenerMusica();
+                Greenfoot.setWorld(new Jungle());
+                Greenfoot.delay(180);
+            } else {
+                ((Jungle)getWorld()).detenerMusica();
+                Greenfoot.stop();
+            }
+                
         }
     }
     public void perder()
