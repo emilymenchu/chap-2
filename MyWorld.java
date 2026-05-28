@@ -12,17 +12,49 @@ public class MyWorld extends World
      * Constructor for objects of class MyWorld.
      */
     GreenfootSound musica = new GreenfootSound("Juegooo.mp3");
+    int timerTexto = 0;
+    boolean juegoIniciado = false;
     public MyWorld()
     {
         super(900, 600, 1);
         prepare();
         musica.playLoop();
+        
+        showText
+        (
+            "¡Ayuda al Oso polar! Su hábitat se está destruyendo y siente mucho calor",
+            450,
+            40
+        );
+        showText
+        (
+            "Obtén una soda para tu amigo el Oso Polar",
+            450,
+            70
+        );
+        showText
+        (
+            "Usa las teclas de flechas para moverte hacia la izquierda, derecha y saltar",
+            450,
+            100
+        );
+
     }
 
-    /**
-     * Prepare the world for the start of the program.
-     * That is: create the initial objects and add them to the world.
-     */
+    public void act()
+    {
+        timerTexto++;
+    
+        if(timerTexto > 360)
+        {
+            juegoIniciado = true;
+            showText("", 450, 40);
+    
+            showText("", 450, 70);
+    
+            showText("", 450, 100);
+        }
+    }
     private void prepare()
     {
         Dispenser dispenser =  new  Dispenser();
@@ -85,7 +117,11 @@ public class MyWorld extends World
         addObject(p5, 450, 150);
 
         Penguin penguin = new Penguin();
+        penguin.velocidadX = -2;
+        penguin.limiteMin = 240;
+        penguin.limiteMax = 640;
         addObject(penguin,441,104);
+        
         Bear bear = new Bear();
         addObject(bear,853,472);
         bear.setLocation(854,512);

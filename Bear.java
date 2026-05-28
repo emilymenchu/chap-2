@@ -19,6 +19,7 @@ public class Bear extends Actor
     }
     public void act()
     {
+        
     }
     public void ganar()
     {

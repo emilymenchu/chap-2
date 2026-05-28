@@ -15,6 +15,11 @@ public class Cat extends Actor
     int velocidadY = 0;
     int gravedad = 1;
     int salto = -15;
+    
+    boolean cayendo = false;
+
+    int timerCaida = 0;
+    
     GreenfootImage defaultImg = new GreenfootImage("cat.png");
     GreenfootImage rightImg = new GreenfootImage("cat-right.png");
     GreenfootImage leftImg = new GreenfootImage("cat-left.png");
@@ -25,9 +30,24 @@ public class Cat extends Actor
     }
     public void act()
     {
-        mover();
-        aplicarGravedad();
-        verificarVictoria();
+        MyWorld mundo = (MyWorld)getWorld();
+
+        if(!mundo.juegoIniciado)
+        {
+            return;
+        }
+         if(cayendo)
+        {
+            caerDerrotado();
+        }
+        else
+        {
+            mover();
+            aplicarGravedad();
+            verificarPinguino();
+            verificarVictoria();
+        }
+        
     }
     public void mover()
     {
@@ -144,6 +164,40 @@ public class Cat extends Actor
             );
 
             Greenfoot.stop();
+        }
+    }
+    public void perder()
+    {
+        cayendo = true;
+
+        velocidadY = 12;
+    }
+    public void caerDerrotado()
+    {
+        timerCaida++;
+    
+        setLocation(getX(), getY() + velocidadY);
+    
+        setRotation(getRotation() + 10);
+    
+        if(timerCaida > 60)
+        {
+            setLocation(100, 500);
+    
+            setRotation(0);
+    
+            cayendo = false;
+    
+            timerCaida = 0;
+        }
+    }
+    public void verificarPinguino()
+    {
+        if(isTouching(Penguin.class))
+        {
+            Penguin p = (Penguin)getOneIntersectingObject(Penguin.class);
+    
+            p.derrotar();
         }
     }
 }

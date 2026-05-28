@@ -17,6 +17,11 @@ public class Penguin extends Actor
 
     int limiteMin;
     int limiteMax;
+    int timer = 0;
+    
+    boolean derrotado = false;
+    int velocidadCaida = 5;
+
 
     boolean vertical = false;
     public Penguin()
@@ -27,11 +32,24 @@ public class Penguin extends Actor
     }
     public void act()
     {
-        mover();
+        MyWorld mundo = (MyWorld)getWorld();
+
+        if(!mundo.juegoIniciado)
+        {
+            return;
+        }
+        if(derrotado)
+        {
+            caer();
+        }
+        else
+        {
+            mover();
+            lanzarDulces();
+        }
     }
     public void mover()
     {
-        // movimiento vertical
         if(vertical)
         {
             setLocation(getX(), getY() + velocidadY);
@@ -42,7 +60,6 @@ public class Penguin extends Actor
             }
         }
 
-        // movimiento horizontal
         else
         {
             setLocation(getX() + velocidadX, getY());
@@ -51,6 +68,40 @@ public class Penguin extends Actor
             {
                 velocidadX = -velocidadX;
             }
+        }
+    }
+
+    public void lanzarDulces()
+    {
+        timer++;
+
+        if(timer >= 80)
+        {
+            Candy dulce = new Candy();
+
+            getWorld().addObject
+            (
+                dulce,
+                getX(),
+                getY() + 20
+            );
+
+            timer = 0;
+        }
+    }
+    public void derrotar()
+    {
+        derrotado = true;
+    }
+    public void caer()
+    {
+        setLocation(getX(), getY() + velocidadCaida);
+    
+        setRotation(getRotation() + 10);
+    
+        if(getY() > getWorld().getHeight())
+        {
+            getWorld().removeObject(this);
         }
     }
 }

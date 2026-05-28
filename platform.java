@@ -28,6 +28,12 @@ public class Platform extends Actor
 
     public void act()
     {
+        MyWorld mundo = (MyWorld)getWorld();
+
+        if(!mundo.juegoIniciado)
+        {
+            return;
+        }
         mover();
     }
 
